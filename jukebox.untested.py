@@ -76,8 +76,7 @@ try:
                 print("Killing current song!")
                 blink(fast,flash)
                 os.system('killall mpg123')
-        else:
-    #        playing = 0
+        else:  # NOT playing
             ledoff()
             if (stop_flag==1):
                 print("Fully stopped.")
@@ -89,7 +88,7 @@ try:
                 os.system(play_command)
                 blink(fast,flash)
     #            time.sleep(5)
-#Need this? time.sleep(.1)
+        time.sleep(.1) # Need so there's time to catch keyboard interrupt???
         
 except KeyboardInterrupt:  
     # here you put any code you want to run before the program   
