@@ -9,7 +9,10 @@ Pay attention to the GPIO pins assigned and adjust accordingly.
 This is ONLY the controller. It calls other software (to be added?) that does the heavy lifting. If can be edited to do anything.
 This is surely not the best way to do things, but it's what I've figured out.
 
-The hardware side is 2 buttons (one play/skip, one stop) and one LED (off = STOP, on = PLAY, fast-blink = command received (not universal), slow-blink = waiting for current song to end to stop and await further instructions.
+The hardware side is 2 buttons (one play/skip, one stop) and one LED:
+    off = STOP, on = PLAY, fast-blink = command received (not universal), slow-blink = waiting for current song to end to stop and await further instructions.
+
+Will add hardware diagram and/or pics when able.
 
 jukebox.py is the main script. Anything else is jsut my hacking/testing, etc. 
 
