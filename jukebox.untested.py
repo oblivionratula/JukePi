@@ -36,23 +36,18 @@ def ledon():
 def ledoff():
     GPIO.output(LEDPin, GPIO.LOW)
 
-def fastblink(fr):
-    for x in range(0,fr):
+def blink(rate,repeats):
+    for x in range(0,repeats):
         ledon
-        time.sleep(.1)
+        time.sleep(rate)
         ledoff
-        time.sleep(.1)
-
-def slowblink(sr):
-    for x in range(0,sr):
-        ledon
-        time.sleep(.5)
-        ledoff
-        time.sleep(.5)
+        time.sleep(rate)
 
 long= 5 # # of blinks constants
 short = 3
 flash = 1
+fast = .1
+slow = .5
 
 print "Waiting to do something . . . "
 try:
@@ -62,11 +57,11 @@ try:
         ps=os.system("ps aux |grep 'myplayer.pl -cj' |grep -v grep >/dev/null")
         if (ps==0):   #Playing (reverse logic, here, ps returns 0 if process found, 256 if not.
             if (stop_flag == 1):
-                slowblink(flash)
+                blink(slow,flash)
             else: 
                 ledon()
             if (stop_button):
-                fastblink(long)
+                blink(fast,long)
                 print("Stop button pressed.")
                 if (stop_flag == 1):
                     print ("Already put the brakes on, waiting for this song to end, hold on to your horses!")
@@ -75,11 +70,11 @@ try:
 #                    ledoff()
                     os.system(stop_command)
                     stop_flag = 1
-                    slowblink(flash)
+                    blink(slow,flash)
     #            time.sleep(2)
             elif (play_button):  # Optional: read 'play' and skip current song?
                 print("Killing current song!")
-                fastblink(flash)
+                blink(fast,flash)
                 os.system('killall mpg123')
         else:
     #        playing = 0
@@ -90,9 +85,9 @@ try:
             if (play_button):
                 print("Play button pressed.")
                 print("Starting jukebox . . . ")
-                fastblink(flash)
+                blink(fast,flash)
                 os.system(play_command)
-                fastblink(flash)
+                blink(fast,flash)
     #            time.sleep(5)
 #Need this? time.sleep(.1)
         
