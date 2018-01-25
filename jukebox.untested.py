@@ -14,6 +14,10 @@ import sys, os
 #print ("Zoom:")
 #print (zoom)
 
+# The hardware side is 2 buttons (one play/skip, one stop) and one LED:
+#     off = STOP, on = PLAY, fast-blink = command received, slow-blink = waiting for current song to end to stop and await further instructions.
+
+
 LEDPin = 15 #15 or 27?
 StopPin = 17
 PlayPin = 18
@@ -27,25 +31,28 @@ play_command = "~/bin/myplayer.pl -cj &"
 stop_command = "~/bin/myplayer.pl -a"
 stop_flag=0
 
-def fastblink():
-    for x in range(0,5):
-        GPIO.output(LEDPin, GPIO.HIGH)
-        time.sleep(.1)
-        GPIO.output(LEDPin, GPIO.LOW)
-        time.sleep(.1)
-
-def slowblink():
-    for x in range(0,2):
-        GPIO.output(LEDPin, GPIO.HIGH)
-        time.sleep(.5)
-        GPIO.output(LEDPin, GPIO.LOW)
-        time.sleep(.5)
-
 def ledon():
     GPIO.output(LEDPin, GPIO.HIGH)
 def ledoff():
     GPIO.output(LEDPin, GPIO.LOW)
 
+def fastblink(fr):
+    for x in range(0,fr):
+        ledon
+        time.sleep(.1)
+        ledoff
+        time.sleep(.1)
+
+def slowblink(sr):
+    for x in range(0,sr):
+        ledon
+        time.sleep(.5)
+        ledoff
+        time.sleep(.5)
+
+long= 5 # # of blinks constants
+short = 3
+flash = 1
 
 print "Waiting to do something . . . "
 try:
@@ -53,27 +60,27 @@ try:
         stop_button = not GPIO.input(StopPin)
         play_button = not GPIO.input(PlayPin)
         ps=os.system("ps aux |grep 'myplayer.pl -cj' |grep -v grep >/dev/null")
-        if (ps==0):   #Playing  # Optional: read 'play' and skip current song?
+        if (ps==0):   #Playing (reverse logic, here, ps returns 0 if process found, 256 if not.
             if (stop_flag == 1):
-                slowblink()
+                slowblink(flash)
             else: 
                 ledon()
             if (stop_button):
+                fastblink(long)
                 print("Stop button pressed.")
                 if (stop_flag == 1):
                     print ("Already put the brakes on, waiting for this song to end, hold on to your horses!")
                 else:
                     print("Stopping after this song finishes.")
-                    ledoff()
+#                    ledoff()
                     os.system(stop_command)
                     stop_flag = 1
-                    slowblink()
+                    slowblink(flash)
     #            time.sleep(2)
-            elif (play_button):
+            elif (play_button):  # Optional: read 'play' and skip current song?
                 print("Killing current song!")
-                fastblink()
+                fastblink(flash)
                 os.system('killall mpg123')
-                
         else:
     #        playing = 0
             ledoff()
@@ -83,15 +90,16 @@ try:
             if (play_button):
                 print("Play button pressed.")
                 print("Starting jukebox . . . ")
+                fastblink(flash)
                 os.system(play_command)
-                fastblink()
+                fastblink(flash)
     #            time.sleep(5)
-        time.sleep(.1)
+#Need this? time.sleep(.1)
         
 except KeyboardInterrupt:  
     # here you put any code you want to run before the program   
     # exits when you press CTRL+C  
-    print "Exiting.\n", counter # print value of counter  
+    print "Exiting gracefully.\n" # Print something on exit.
   
 except:  
     # this catches ALL other exceptions including errors.  

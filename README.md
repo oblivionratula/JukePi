@@ -20,7 +20,7 @@ I don't know that I'll maintain this, but if you want to submit pull requests, I
 
 For now, this does what I want, but I may also be looking to add an LIRC component.
 
-I think I need to more gracefully exit (keyboard interrupt or something) and release the GPIO pins? Because currently I get "Already in use" warnings, but things work.
+Testing:  I think I need to more gracefully exit (keyboard interrupt or something) and release the GPIO pins? Because currently I get "Already in use" warnings, but things work.
 
 Enjoy/don't laugh too hard.
 
