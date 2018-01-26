@@ -96,7 +96,7 @@ except KeyboardInterrupt:
     print "Exiting gracefully.\n" # Print something on exit.
   
 except:  
-    # this catches ALL other exceptions including errors.  #MEM note: This does nto seem to catch 'killall'
+    # this catches ALL other exceptions including errors.  #MEM note: This does not seem to catch 'killall'
     # You won't get any error messages for debugging  
     # so only use it once your code is working  
     print "Other error or exception occurred!"  
