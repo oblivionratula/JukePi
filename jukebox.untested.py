@@ -38,9 +38,9 @@ def ledoff():
 
 def blink(rate,repeats):
     for x in range(0,repeats):
-        ledon
+        ledon()
         time.sleep(rate)
-        ledoff
+        ledoff()
         time.sleep(rate)
 
 long= 5 # # of blinks constants
