@@ -3,7 +3,9 @@
 import  RPi.GPIO as GPIO
 import time
 import sys, os
+import lirc
 
+sockid = lirc.init("jukebox_ctrl", blocking=False)
 ### To-Do
 #  (Done? Need to test.) Shutdown more gracefully : http://raspi.tv/2013/rpi-gpio-basics-3-how-to-exit-gpio-programs-cleanly-avoid-warnings-and-protect-your-pi
 # Add LIRC?  Not sure how to interrupt those 'waits' with button presses.
@@ -14,18 +16,14 @@ import sys, os
 #print ("Zoom:")
 #print (zoom)
 
-# The hardware side is 2 buttons (one play/skip, one stop) and one LED:
+# The hardware side is IR receiver and one LED:
 #     off = STOP, on = PLAY, fast-blink = command received, slow-blink = waiting for current song to end to stop and await further instructions.
 
 
 LEDPin = 3 # 3 for IR rig, 15 for pushbutton rig?
-StopPin = 17
-PlayPin = 18
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(LEDPin, GPIO.OUT)
-GPIO.setup(StopPin, GPIO.IN,pull_up_down=GPIO.PUD_UP)
-GPIO.setup(PlayPin, GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 play_command = "~/bin/myplayer.pl -cj &"
 stop_command = "~/bin/myplayer.pl -a"
@@ -52,8 +50,18 @@ slow = .5
 print "Waiting to do something . . . "
 try:
     while True:
-        stop_button = not GPIO.input(StopPin)
-        play_button = not GPIO.input(PlayPin)
+        ir = lirc.nextcode()
+        play_button = 0
+        stop_button = 0
+        
+        if (ir == play):
+            play_button = 1
+        elif (ir == stop):
+            stop_button = 1
+        elif (ir == skip):
+            play_button = 1
+#        stop_button = not GPIO.input(StopPin)
+#        play_button = not GPIO.input(PlayPin)
         ps=os.system("ps aux |grep 'myplayer.pl -cj' |grep -v grep >/dev/null")
         if (ps==0):   #Playing (reverse logic, here, ps returns 0 if process found, 256 if not.
             if (stop_flag == 1):
@@ -106,3 +114,5 @@ except:
   
 finally:  
     GPIO.cleanup() # this ensures a clean exit
+    lirc.deinit()
+    
