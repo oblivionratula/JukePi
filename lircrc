@@ -1,0 +1,29 @@
+#begin
+#	remote = lircd.conf
+#	button = KEY_PAUSE
+#	prog = irexec
+#	repeat = 0
+#	config = echo "Hello world!"
+#end
+
+begin
+	remote = lircd.conf
+	button = KEY_PLAY
+	prog = jukebox_ctrl
+	repeat = 0
+	config = play
+end
+
+begin
+	button = KEY_STOP
+	prog = jukebox_ctrl
+	repeat = 0
+	config = stop
+end
+
+begin
+	button = KEY_NEXTSONG
+	prog = jukebox_ctrl
+	repeat = 0
+	config = skip
+end

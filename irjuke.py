@@ -50,15 +50,20 @@ slow = .5
 print "Waiting to do something . . . "
 try:
     while True:
-        ir = lirc.nextcode()
         play_button = 0
         stop_button = 0
-        
-        if (ir == play):
+        ir = lirc.nextcode()
+        if (len(ir)==1):
+            ir = str(ir[0])
+        else:
+            ir = ''
+#        print ir        
+        if (ir == 'play'):
             play_button = 1
-        elif (ir == stop):
+            print "In here"
+        elif (ir == 'stop'):
             stop_button = 1
-        elif (ir == skip):
+        elif (ir == 'skip'):
             play_button = 1
 #        stop_button = not GPIO.input(StopPin)
 #        play_button = not GPIO.input(PlayPin)
@@ -89,8 +94,8 @@ try:
             if (stop_flag==1):
                 print("Fully stopped.")
                 stop_flag = 0
-            else:
-                blink(2,flash)
+#            else:
+#                blink(2,flash)
             if (play_button):
                 print("Play button pressed.")
                 print("Starting jukebox . . . ")
