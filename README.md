@@ -28,7 +28,11 @@ lirc_dev
 lirc_rpi gpio_in_pin=2
  
 Set the pin number to wherever your IR signal line is going.  I don't know if that redundance is needed, but it's what works for me. You can set an out pin, too, if you're making an IR blaster, but that's not at all handled here.
+
 Reboot after changes.
+
+Also need to:
+sudo apt-get install python-lirc
 
 There is an example lircd.conf file, but it only works with my specific remote - you'd need to use irrecord to grab your version of the truth (once you confrm you can see IR action with: mode2 -d /dev/lirc0
 E.g.: irrecord -d /dev/lirc0 ~/.lircd.conf
