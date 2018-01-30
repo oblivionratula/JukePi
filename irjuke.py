@@ -7,11 +7,15 @@ import lirc
 
 sockid = lirc.init("jukebox_ctrl", blocking=False)
 ### To-Do
-#  Make killcodes client-specific
+# NEED a more efficient way to check for playing other than ps all the time. 
+# On old RPi, this keeps proc usage up, it seems.  If stopped, definitely don't 
+# need to chack as often.
+
 # Combine pushbutton and LIRC modes in one script w/commmand line switch
 
 #  Done: Need to test.) Shutdown more gracefully : http://raspi.tv/2013/rpi-gpio-basics-3-how-to-exit-gpio-programs-cleanly-avoid-warnings-and-protect-your-pi
 #  Done: Add LIRC?  Not sure how to interrupt those 'waits' with button presses.
+#  Done: Handled in myplayer.pl  - Make killcodes client-specific
 
 # The hardware side is IR receiver and one LED:
 #     off = STOP, on = PLAY, fast-blink = command received, slow-blink = waiting for current song to end to stop and await further instructions.
@@ -44,12 +48,15 @@ fast = .1
 slow = .5
 
 stop_flag=0
+playing = 0
 # Here we go!
 print "Waiting to do something . . . "
 try:
     while True:			# Main loop
         play_button = 0		# Need to reset every time through
         stop_button = 0
+ ## Put in a count look if not playing to wait for lirc for x tries? 
+ #       if (playing):
         ir = lirc.nextcode()	# Get latest IR code from lircd
         if (len(ir)==1):	# If results aren't empty
             ir = str(ir[0])	# De-listify
@@ -66,6 +73,7 @@ try:
         # Reverse logic here, ps returns 0 if process found, 256 if not.
         ps=os.system("ps aux |grep 'myplayer.pl -cj' |grep -v grep >/dev/null")     
         if (ps==0):   			# Yes, playing
+            playing = 1
             if (stop_flag == 1):	# But got we got asked to stop
                 blink(slow,flash)	# So we slow blink until song ends.
             else: 
@@ -89,6 +97,7 @@ try:
             ledoff()			# No LED while full-stopped
             if (stop_flag==1):
                 print("Fully stopped.")
+                playing = 0
                 stop_flag = 0		# Clear the brakes after full-stop
             if (play_button):		# But now getting pressed into action again!
                 print("Play button pressed.")
