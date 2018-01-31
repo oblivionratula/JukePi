@@ -35,7 +35,8 @@ Also need to:
 sudo apt-get install python-lirc
 
 There is an example lircd.conf file, but it only works with my specific remote - you'd need to use irrecord to grab your version of the truth (once you confrm you can see IR action with: mode2 -d /dev/lirc0
-E.g.: irrecord -d /dev/lirc0 ~/.lircd.conf
+E.g.: /etc/ini.d/lirc stop
+	irrecord -d /dev/lirc0 ~/.lircd.conf
 You need to at least grab recordings of keys KEY_PLAY and KEY_STOP. Others are optional (since KEY_NEXTSONG is just a duplicate of PLAY right now and KEY_PAUSE is unimplemented.)
 That file gets copied to /etc/lirc
 
@@ -43,6 +44,7 @@ That file gets copied to /etc/lirc
 Commenting out the LIRCD_ARGS line goes against a lot of suggetions in other docs, but this is what worked for me.
 
 lircrc should reside as ~/.lircrc or as in a system-wide location if more than one user needs it.  This file is what translates received button presses into program calls. It's critical. It should work for our purposes here as-is, but if you want to/already do control other things, you'll meed to merge this in.
+use irw for troubleshooting (man irw)
 
 ### Got to run, leaving off here, but hopefully this gets someone started.
 ### A few URLs I used:
