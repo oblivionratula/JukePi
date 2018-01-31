@@ -47,17 +47,18 @@ flash = 1
 fast = .1
 slow = .5
 
-stop_flag=0
+stop_flag = 0
 playing = 0
+loop_count = 0
 # Here we go!
 print "Waiting to do something . . . "
 try:
     while True:			# Main loop
         play_button = 0		# Need to reset every time through
         stop_button = 0
- ## Put in a count look if not playing to wait for lirc for x tries? 
- #       if (playing):
+        skip_button = 0
         ir = lirc.nextcode()	# Get latest IR code from lircd
+#        print "Loop: ", loop_count, "  ir: ", ir
         if (len(ir)==1):	# If results aren't empty
             ir = str(ir[0])	# De-listify
         else:
@@ -66,21 +67,28 @@ try:
             play_button = 1
         elif (ir == 'stop'):
             stop_button = 1
-        elif (ir == 'skip'):	# This could be better-implemented
-            play_button = 1
-            print "Skip received."
+        elif (ir == 'skip'):
+            skip_button = 1
         # Find out if we  (or someone else?) is already playing.
         # Reverse logic here, ps returns 0 if process found, 256 if not.
-        ps=os.system("ps aux |grep 'myplayer.pl -cj' |grep -v grep >/dev/null")     
+        if (loop_count == 0):
+            ps=os.system("ps aux |grep 'myplayer.pl -cj' |grep -v grep >/dev/null")
+        elif (playing == 1):
+            ps = 0;
+        else:
+            ps = 256
         if (ps==0):   			# Yes, playing
             playing = 1
             if (stop_flag == 1):	# But got we got asked to stop
                 blink(slow,flash)	# So we slow blink until song ends.
+            elif (os.system("ps aux| grep 'mpg123' |grep -v grep > /dev/null")):
+                # Still loading player, show that with fast, broken blinks.
+                blink(fast,short)
             else: 
                 ledon()			# Steady LED if playing unabated.
             if (stop_button):		# Stop command received
                 blink(fast,long)	# Show we got a command
-                print("Stop button pressed.")
+#                print("Stop button pressed.")
                 if (stop_flag == 1):	# We already know . . . Not really needed, just barfs 'status.'
                     print ("Already put the brakes on, waiting for this song to end, hold on to your horses!")
                 else:
@@ -89,9 +97,10 @@ try:
                     os.system(stop_command) # System call to actually plant kill seed. Need a way to make this client-specific.
                     stop_flag = 1
                     blink(slow,flash)
-            elif (play_button):  	# Optional: read 'play' and skip current song?
+            elif (skip_button):  	# Read 'skip_button' and skip current song.
+#                print "Skip received."
                 print("Killing current song!")
-                blink(fast,flash)
+                blink(fast,long)
                 os.system('killall mpg123')
         else:  				# NOT playing
             ledoff()			# No LED while full-stopped
@@ -100,14 +109,18 @@ try:
                 playing = 0
                 stop_flag = 0		# Clear the brakes after full-stop
             if (play_button):		# But now getting pressed into action again!
-                print("Play button pressed.")
+#                print("Play button pressed.")
                 print("Starting jukebox . . . ")
-                blink(fast,flash)	# Acknowledge button press
                 os.system(play_command)	# System call.
-                blink(fast,flash)	# Confirm again w/ fast flash because play call can be slow on old Pi
+                blink(fast,flash)	# Acknowledge button press
+                playing = 1
 
-        time.sleep(.1) 			# Need so there's time to catch keyboard interrupt???
-        
+        time.sleep(.5) 			# Adjust this
+        if (loop_count > 39 or stop_flag == 1):
+            # If we're expecting play to fully stop, we'll poll every loop.
+            loop_count = 0
+        else:
+            loop_count += 1
 except KeyboardInterrupt:  
     # here you put any code you want to run before the program   
     # exits when you press CTRL+C  
