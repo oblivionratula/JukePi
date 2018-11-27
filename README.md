@@ -16,7 +16,7 @@ Will add hardware diagram and/or pics when able.
 
 Main scripts:
 jukebox.py is the pushbutton (original) version.
-irjuke.py is a version that enbles remote control via lirc. It does not use any physical buttons, but still has the LED for status. LIRC takes a bit of set-up, but I'll try to document specifics or point to general resources.  My IR receiver is hacked from an old Sony rear projection TV, but components are very cheap (as long as you're ordering something else at the time. A cheap DSO-138 digital oscilloscope was ciritcal in me troubleshooting the IR receiver.
+irjuke.py is a version that enbles remote control via lirc. It does not use any physical buttons, but still has the LED for status. LIRC takes a bit of set-up, but I'll try to document specifics or point to general resources.  My IR receiver is hacked from an old Sony rear projection TV, but components are very cheap (as long as you're ordering something else at the time). A cheap DSO-138 digital oscilloscope was ciritcal in me troubleshooting the IR receiver.
 I could probably make this one script with a command line switch, but for now, it is two. And may stay that way. We'll see.
 
 IR setup (in progress/incomplete):
