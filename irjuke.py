@@ -9,7 +9,7 @@ sockid = lirc.init("jukebox_ctrl", blocking=False)
 ### To-Do
 # NEED a more efficient way to check for playing other than ps all the time. 
 # On old RPi, this keeps proc usage up, it seems.  If stopped, definitely don't 
-# need to chack as often.
+# need to check as often.
 
 # Combine pushbutton and LIRC modes in one script w/commmand line switch
 
