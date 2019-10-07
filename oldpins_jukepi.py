@@ -18,10 +18,9 @@ play_command = "~/bin/myplayer.pl -cj &"
 #stop_command = "~/bin/myplayer.pl -a"
 stop_command = "~/bin/killmyplayer.pl"
 
-LEDPin = 23 # Physical #16  Was 15 #15 or 27?
-StopPin = 27 # Physical # 13  Was 17
-PlayPin = 22 # Physical 13  Was 18
-   # Groud is any ground but now physical 14 makes sense
+LEDPin = 15 #15 or 27?
+StopPin = 17
+PlayPin = 18
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(LEDPin, GPIO.OUT)
 GPIO.setup(StopPin, GPIO.IN,pull_up_down=GPIO.PUD_UP)
