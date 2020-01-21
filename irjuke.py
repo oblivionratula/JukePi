@@ -24,6 +24,13 @@ play_command = "~/bin/myplayer.pl -cj &"
 #stop_command = "~/bin/myplayer.pl -a"
 stop_command = "~/bin/killmyplayer.pl"
 
+# NOTE:  Look to change these pins. 
+# IR pin is set in: /etc/modules (currently at 2)
+# Pins 2 & 3 are in use by the i2c bus  
+# This is why the status LED is on until the script is started.
+# Have to rewire, but look to maybe 4 and 17 and can use the ground in between (physical pins 7, 9, 11 ). 
+# 5v will not be bundled.
+
 LEDPin = 3 # 3 for IR rig, 15 for pushbutton rig
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(LEDPin, GPIO.OUT)
