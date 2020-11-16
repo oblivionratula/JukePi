@@ -8,7 +8,7 @@ import socket
 # Socket tinkering based on https://www.geeksforgeeks.org/socket-programming-python/
 # set up socket
 s = socket.socket()
-port = 99123
+port = 49123
 s.bind(('', port))
 print "Created listening socket on port %s " %(port)
 s.listen(2)
@@ -62,8 +62,10 @@ try:
     while True:		   # Main loop
        # Establish connection with client.
         c, addr = s.accept()
-        c.send('Connected.')
+        rec_command = c.recv(1)
         c.close()
+        print "Got command:"
+        print rec_command
         # Check buttons
         stop_button = not GPIO.input(StopPin)	# Use 'not' b/c the are pull-down switches
         play_button = not GPIO.input(PlayPin)
