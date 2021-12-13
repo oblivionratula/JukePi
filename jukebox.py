@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/python3
+# Changed to Python3 when Pi crashed 2020/1/20
 
 import  RPi.GPIO as GPIO
 import time
@@ -48,7 +49,7 @@ slow = .5
 
 stop_flag=0
 # Here we go!
-print "Waiting to do something . . . "
+print("Waiting to do something . . . ")
 try:
     while True:		   # Main loop
         stop_button = not GPIO.input(StopPin)	# Use 'not' b/c the are pull-down switches
@@ -93,14 +94,14 @@ try:
 except KeyboardInterrupt:  
     # here you put any code you want to run before the program   
     # exits when you press CTRL+C  
-    print "Exiting gracefully.\n" # Print something on exit.
+    print("Exiting gracefully.\n") # Print something on exit.
   
 except:  
     # this catches ALL other exceptions including errors.  
     #MEM note: This does not catch 'killall' (defautl sig. 9?)
     # You won't get any error messages for debugging  
     # so only use it once your code is working  
-    print "Other error or exception occurred!"  
+    print("Other error or exception occurred!")
   
 finally:  
     GPIO.cleanup() # this ensures a clean exit

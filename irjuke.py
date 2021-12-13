@@ -1,11 +1,13 @@
-#!/usr/bin/python
+#!/usr/bin/python3
+# Changed to Python3 when Pi crashed 2020/1/20
 
-import  RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import time
 import sys, os
 import lirc
 
 sockid = lirc.init("jukebox_ctrl", blocking=False)
+#sockid = lirc.init("jukebox_ctrl")
 ### To-Do
 # NEED a more efficient way to check for playing other than ps all the time. 
 # On old RPi, this keeps proc usage up, it seems.  If stopped, definitely don't 
@@ -58,14 +60,14 @@ stop_flag = 0
 playing = 0
 loop_count = 0
 # Here we go!
-print "Waiting to do something . . . "
+print("Waiting to do something . . . ")
 try:
     while True:			# Main loop
         play_button = 0		# Need to reset every time through
         stop_button = 0
         skip_button = 0
         ir = lirc.nextcode()	# Get latest IR code from lircd
-#        print "Loop: ", loop_count, "  ir: ", ir
+#        print("Loop: ", loop_count, "  ir: ", ir)
         if (len(ir)==1):	# If results aren't empty
             ir = str(ir[0])	# De-listify
         else:
@@ -97,7 +99,7 @@ try:
                 blink(fast,long)	# Show we got a command
 #                print("Stop button pressed.")
                 if (stop_flag == 1):	# We already know . . . Not really needed, just barfs 'status.'
-                    print ("Already put the brakes on, waiting for this song to end, hold on to your horses!")
+                    print("Already put the brakes on, waiting for this song to end, hold on to your horses!")
                 else:
                     print("Stopping after this song finishes.")
 #                    ledoff()
@@ -131,16 +133,15 @@ try:
 except KeyboardInterrupt:  
     # here you put any code you want to run before the program   
     # exits when you press CTRL+C  
-    print "Exiting gracefully.\n" # Print something on exit.
+    print("Exiting gracefully.\n") # Print something on exit.
   
 except:  
     # this catches ALL other exceptions including errors.  
     #MEM note: This does not catch 'killall' (defautl sig. 9?)
     # You won't get any error messages for debugging  
     # so only use it once your code is working  
-    print "Other error or exception occurred!"  
-  
+    print("Other error or exception occurred!")
+
 finally:  
     GPIO.cleanup() # this ensures a clean exit
     lirc.deinit()
-    
